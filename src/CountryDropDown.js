@@ -6,7 +6,7 @@ class CountryDropDown extends Component {
       <ul>
         {this.props.countries.map((country, index) => {
           return (
-            <li key={index}>{country.name}</li>
+            <li onClick={() => this.props.onChange(country.code)} key={index} >{country.name}</li>
           );
         })}
       </ul>
