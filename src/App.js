@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import CountryDropDown from './CountryDropDown';
-import StateDropDown from './StateDropDown';
+import Dropdown from './Dropdown';
 
 class App extends Component {
   constructor(props) {
@@ -10,6 +9,7 @@ class App extends Component {
       states: []
     };
     this.countrySelected = this.countrySelected.bind(this);
+    this.stateSelected = this.stateSelected.bind(this);
   }
 
   componentDidMount() {
@@ -32,11 +32,15 @@ class App extends Component {
     });
   }
 
+  stateSelected(state) {
+
+  }
+
   render() {
     return (
       <div className="App">
-        <CountryDropDown onChange={this.countrySelected} countries={this.state.countries} />
-        <StateDropDown states={this.state.states} />
+        <Dropdown onChange={this.countrySelected} items={this.state.countries} defaultText="Select Country" />
+        <Dropdown onChange={this.stateSelected} items={this.state.states} defaultText="Select State" />
       </div>
     );
   }
