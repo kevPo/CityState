@@ -49,6 +49,7 @@
 }
 
 .select-options {
+  background-color: #35353E;
   display: none;
   position: absolute;
   top: 100%;
