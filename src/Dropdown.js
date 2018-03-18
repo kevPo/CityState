@@ -5,17 +5,32 @@ class DropDown extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: {name: this.props.defaultText},
+      selected: this.props.defaultSelection,
       listVisible: false
     };
+    this.selected = this.selected.bind(this);
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
   }
 
-  selected(country) {
-    this.props.onChange(country.code);
+  componentWillReceiveProps(nextProps) {
+    if (this.state.selected !== nextProps.defaultSelection) {
+      const results = nextProps.items.find(item => {
+        return item.id === this.state.selected.id;
+      });
+
+      if (results === undefined)
+        this.setState({
+          selected: nextProps.defaultSelection,
+          listVisible: false
+        })
+    }
+  }
+
+  selected(item) {
+    this.props.onChange(item);
     this.setState({
-      selected: country,
+      selected: item,
       listVisible: false
     });
   }
@@ -39,11 +54,13 @@ class DropDown extends Component {
   render() {
     return (
       <div className="select">
-        <div onClick={this.show} className={"select-current " + (this.state.listVisible ? "active" : "")}>{this.state.selected.name}</div>
+        <div onClick={this.show} className={"select-current " + (this.state.listVisible ? "active" : "")}>
+          { this.state.selected ? this.state.selected.name : this.props.defaultSelection.name }
+        </div>
         <ul className={"select-options " + (this.state.listVisible ? "select-options__visible" : "")}>
-          {this.props.items.map((country, index) => {
+          {this.props.items.map((item, index) => {
             return (
-              <li onClick={() => this.selected(country)} key={index} >{country.name}</li>
+              <li onClick={() => this.selected(item)} key={index} >{item.name}</li>
             );
           })}
         </ul>

@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import Dropdown from './Dropdown';
+import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       countries: [],
-      states: []
+      states: [],
+      selectedCountry: {name: 'Select Country', id: -1},
+      selectedState: {name: 'Select State', id: -1}
     };
     this.countrySelected = this.countrySelected.bind(this);
     this.stateSelected = this.stateSelected.bind(this);
@@ -15,20 +18,50 @@ class App extends Component {
   componentDidMount() {
     fetch('https://xc-ajax-demo.herokuapp.com/api/countries')
     .then(response => response.json())
+    .catch(error => {
+      console.error('error fetching countries');
+      console.error(error);
+    })
     .then(data => {
+      if (data === undefined)
+        return;
+
+      const filteredCountries = data.filter(country => {
+        return country.name.trim() !== '';
+      });
+
       this.setState({
-        countries: data
+        countries: filteredCountries,
+        selectedCountry: { name: "Select Country!" }
       });
     });
   }
 
-  countrySelected(countryCode) {
-    fetch(`https://xc-ajax-demo.herokuapp.com/api/countries/${countryCode}/states`)
+  countrySelected(country) {
+    fetch(`https://xc-ajax-demo.herokuapp.com/api/countries/${country.code}/states`)
     .then(response => response.json())
-    .then(data => {
+    .catch(error => {
+      console.error(error);
       this.setState({
-        states: data
+        states: [],
+        selectedState: { name: 'No States Found' }
       });
+    })
+    .then(data => {
+      if (data !== undefined && data.length > 0) {
+        this.setState({
+          states: data,
+          selectedState: data[0]
+        });
+      }
+      else {
+        this.setState({
+          states: [],
+          selectedState: { name: 'No States Found', id: -1 }
+        })
+      }
+
+      
     });
   }
 
@@ -38,9 +71,14 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <Dropdown onChange={this.countrySelected} items={this.state.countries} defaultText="Select Country" />
-        <Dropdown onChange={this.stateSelected} items={this.state.states} defaultText="Select State" />
+      <div>
+        <div className="container">
+          <h1>HOW FAR IS...</h1>
+        </div>
+        <div className="container">
+          <Dropdown onChange={this.countrySelected} items={this.state.countries} defaultSelection={this.state.selectedCountry} />
+          <Dropdown onChange={this.stateSelected} items={this.state.states} defaultSelection={this.state.selectedState} />
+        </div>
       </div>
     );
   }
