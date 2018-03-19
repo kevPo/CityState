@@ -1,0 +1,22 @@
+nav {
+  width: 100%;
+  padding: 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 10px;
+}
+
+nav ul.container {
+  justify-content: flex-start;
+}
+
+nav a:hover {
+  color: #E23E47;
+  -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
