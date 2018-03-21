@@ -30,8 +30,9 @@ class ChooseState extends Component {
         return country.name.trim() !== '';
       });
 
+      var countries = filteredCountries.sort((a, b) => a.name.localeCompare(b.name));
       this.setState({
-        countries: filteredCountries,
+        countries,
         selectedCountry: { name: "Select Country" }
       });
     });
@@ -53,8 +54,9 @@ class ChooseState extends Component {
     })
     .then(data => {
       if (data !== undefined && data.length > 0) {
+        var states = data.sort((a, b) => a.name.localeCompare(b.name));
         this.setState({
-          states: data,
+          states,
           selectedState: data[0],
           selectedCountry,
           formattedSelection
